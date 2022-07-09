@@ -1,11 +1,12 @@
+# This file is intended to read the specified data on the table (./imgs/table) and store them in array which will be used in excelDataAndImageAuto.py.
+
 import cv2
 import re
-from numpy import append
 import pytesseract
 from pytesseract import Output
 
 
-
+# Options to amplify the recognization text by pytesseract
 def convert_grayscale(img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     return img
@@ -18,12 +19,13 @@ def threshold(img):
     img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     return img
 
+
 def findValue(image):
     value = []
     averageValues = []
     percentileValues = []
     # img = cv2.imread('{} - SSPL.VAL.13.02.png'.format(image))
-    img = cv2.imread('imgs/{} - SSPL.VAL.13.02.png'.format(image))
+    img = cv2.imread('{}'.format(image))
 
     # convert_grayscale(img)
     # threshold(img)
@@ -111,4 +113,4 @@ def findValue(image):
     value.append(averageValues)
     return value
 
-print(findValue('1'))
+# print(findValue('./imgs/table/1 - SSPL.VAL.13.02 .png'))
