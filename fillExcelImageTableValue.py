@@ -5,18 +5,17 @@ from openpyxl.utils.units import pixels_to_EMU, cm_to_EMU
 from openpyxl.drawing.spreadsheet_drawing import OneCellAnchor, AnchorMarker
 from openpyxl.styles import numbers
 from percentileFinder import findValue
+from daysNumber import daysNumber
 
 
 # ensure the filename, sequence, and cid.
-def createReport(cid, startPicture, endPicture):
+def createReport(cid, startPicture, endPicture, daysNumber):
     endOfMonth = True
-    fileName = '*.xlsx'
+    errorLog = []
+    fileName = '017_FT2210_01_Daily Burst Traffic Utilization Report_SSPL.VAL.73.02_October 2022.xlsx'
 
     # Load the workbook
     wb = load_workbook(fileName)
-
-
-    cid = 1
 
     if (cid == 0):
         newNameFile = '{} - SSPL.VAL.13.02.png'.format('date')
@@ -70,6 +69,9 @@ def createReport(cid, startPicture, endPicture):
 
     for i in range(startPicture, endPicture):
         # This is for graph
+        if daysNumber == 30:
+            if i == 31:
+                i = 32
         if (cid == 0):
             newNameFile = '{} - SSPL.VAL.13.02.png'.format(i)
         if (cid == 1):
@@ -96,9 +98,9 @@ def createReport(cid, startPicture, endPicture):
                 result2 = result[0][1].replace('.',',')
                 cellRow = 36 + i
                 print(result1, result2, 'cell row', cellRow)
-                ws['D{}'.format(cellRow)] = result1
-                ws['F{}'.format(cellRow)]  = result2  
-                ws['D{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
+                ws['D{}'.format(cellRow)] = int(result1)/1000
+                ws['F{}'.format(cellRow)]  = int(result2)/1000  
+                ws['D{}'.format(cellRow)].number_format = '#,##'
                 ws['F{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
             # insertValue = findValue('{}.1'.format(i))
             # ws['D{}'.format(row + i)] = insertValue[0]
@@ -106,6 +108,8 @@ def createReport(cid, startPicture, endPicture):
 
         except:
             print('data unavailable')
+            errorLog.append(newNameFile)
+
 
         h, w = img.height, img.width
 
@@ -136,8 +140,8 @@ def createReport(cid, startPicture, endPicture):
                 result2 = result[1][1].replace('.',',')
                 cellRow = 69
                 print(result1, result2, 'cell row', cellRow)
-                ws['D{}'.format(cellRow)] = result1
-                ws['F{}'.format(cellRow)]  = result2  
+                ws['D{}'.format(cellRow)] = int(result1)/1000
+                ws['F{}'.format(cellRow)]  = int(result2)/1000
                 ws['D{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
                 ws['F{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
                 
@@ -145,8 +149,8 @@ def createReport(cid, startPicture, endPicture):
                 result2 = result[0][1].replace('.',',')
                 cellRow = 71
                 print(result1, result2, 'cell row', cellRow)
-                ws['D{}'.format(cellRow)] = result1
-                ws['F{}'.format(cellRow)]  = result2  
+                ws['D{}'.format(cellRow)] = int(result1)/1000
+                ws['F{}'.format(cellRow)]  = int(result2)/1000
                 ws['D{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
                 ws['F{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
 
@@ -166,7 +170,22 @@ def createReport(cid, startPicture, endPicture):
         ws.add_image(img)
         ws.add_image(imgTable)
     wb.save('[completed]{}.xlsx'.format(fileName))
+    print('please check the log below: {}'.format(errorLog))
 
-createReport(0, 1, 32)
 
+createReport(3, 1, 32, daysNumber(2022, 9))
+# if (cid == 0):
+# newNameFile = '{} - SSPL.VAL.13.02.png'.format(i)
+# if (cid == 1):
+# newNameFile = '{} - SSPL.VAL.13.03.png'.format(i)
+# if (cid == 2):
+# newNameFile = '{} - SSPL.MIX.011_.png'.format(i)
+# if (cid == 3):
+# newNameFile = '{} - SSPL.VAL.73.02.png'.format(i)
+# if (cid == 4):
+# newNameFile = '{} - SSPL.VAL.73.01.png'.format(i)
+# if (cid == 5):
+# newNameFile = '{} - BKE.VAL.73.01.png'.format(i)
+# if (cid == 6):
+# newNameFile = '{} - GRNA.VAL.73.01.png'.format(i)
 

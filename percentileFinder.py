@@ -1,5 +1,6 @@
 # This file is intended to read the specified data on the table (./imgs/table) and store them in array which will be used in excelDataAndImageAuto.py.
 
+from distutils.command.config import config
 import cv2
 import re
 import pytesseract
@@ -26,14 +27,17 @@ def findValue(image):
     percentileValues = []
     # img = cv2.imread('{} - SSPL.VAL.13.02.png'.format(image))
     img = cv2.imread('{}'.format(image))
+    resize = cv2.resize(img, None, fx=6.5, fy=6.5, interpolation=cv2.INTER_CUBIC)
+    bw = cv2.cvtColor(resize, cv2.COLOR_BGR2GRAY)
+
 
     # convert_grayscale(img)
     # threshold(img)
     pre = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    custom_config = r'--oem 3 --psm 11'
+    custom_config = r'--psm 4 --oem 3'
 
 
-    d = pytesseract.image_to_data(img, output_type=Output.DICT)
+    d = pytesseract.image_to_data(bw, output_type=Output.DICT, config=custom_config)
     keys = list(d.keys())
 
     found = 0
@@ -91,11 +95,13 @@ def findValue(image):
                         if (y >= yStart -1):
                             if (re.findall("\d", d['text'][i])):
                                 # replace comma, convert to kbit to Mbit, and change to string again
-                                newValue = d['text'][i].replace(',','')
-                                newValue = int(newValue)/1000
-                                newValue = str(newValue)
+                                    
+                                # newValue = d['text'][i].replace('.','')
+                                # newValue = d['text'][i].replace(',','')
+                                # newValue = int(newValue)/1000
+                                # newValue = str(newValue)
 
-                                percentileValues.append(newValue)
+                                percentileValues.append(d['text'][i])
 
                 if (foundAverage == 1):
                     if (x > xAverage and x < xStart):
@@ -111,6 +117,19 @@ def findValue(image):
                 pass
     value.append(percentileValues)
     value.append(averageValues)
+
+    for i in range(len(value)):
+        for j in range(len(value[i])):
+            # print(value[i][j])
+            if (re.search(r',', value[i][j])):
+                value[i][j] = value[i][j].replace(',','')
+            if (re.search(r'.', value[i][j])):
+                value[i][j] = value[i][j].replace('.','')
+    # for numbers in value:
+    #     for number in numbers:
+    #         if (re.search(r',', number)):
+    #             print(number)
     return value
 
-# print(findValue('./imgs/table/1 - SSPL.VAL.13.02 .png'))
+# print(findValue('./imgs/table/6 - SSPL.VAL.13.02.png'))
+# print(findValue('./imgs/table/7 - SSPL.VAL.13.02.png'))

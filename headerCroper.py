@@ -2,16 +2,20 @@
 # Crop the selected area to exclude the header by using this headerCropper.
 
 from PIL import Image
+from daysNumber import daysNumber
 
-def cropImage(cid, startNumber, endNumber):
+def cropImage(cid, startNumber, endNumber, daysNumber):
     nameFile = startNumber
     while nameFile <= endNumber:
+        if daysNumber == 30:
+            if nameFile == 31:
+                nameFile = 32
         if (cid == 0):
             newNameFile = '{} - SSPL.VAL.13.02.png'.format(nameFile)
         if (cid == 1):
             newNameFile = '{} - SSPL.VAL.13.03.png'.format(nameFile)
         if (cid == 2):
-            newNameFile = '{} - SSPL.MIX.011_.png'.format(nameFile)
+            newNameFile = '{} - SSPL.MIX1.011.png'.format(nameFile)
         if (cid == 3):
             newNameFile = '{} - SSPL.VAL.73.02.png'.format(nameFile)
         if (cid == 4):
@@ -21,6 +25,8 @@ def cropImage(cid, startNumber, endNumber):
         if (cid == 6):
             newNameFile = '{} - GRNA.VAL.73.01.png'.format(nameFile)
 
+
+        
         im = Image.open('./imgs/graph/{}'.format(newNameFile))
             #  x = 306
             #  left = x - 16
@@ -39,5 +45,28 @@ def cropImage(cid, startNumber, endNumber):
         nameFile += 1
 
 # print(findValue('./imgs/graph/3 - SSPL.VAL.13.02.png'))
-print(cropImage(1,1,32))
-print(cropImage(0,1,32))
+# crop Image (cid, start, end, func(daysNumber))
+# daysNumber = daysNumber(2021, 11)
+# print(cropImage(0,1,32,daysNumber))
+# print(cropImage(1,1,32,daysNumber))
+# print(cropImage(4,1,32,daysNumber))
+i = 0
+# while i <= 6:
+#     cropImage(i, 1, 32, daysNumber(2021, 12))
+#     i += 1
+cropImage(3, 1, 32, daysNumber=(2022, 10))
+
+# if (cid == 0):
+# newNameFile = '{} - SSPL.VAL.13.02.png'.format(nameFile)
+# if (cid == 1):
+# newNameFile = '{} - SSPL.VAL.13.03.png'.format(nameFile)
+# if (cid == 2):
+# newNameFile = '{} - SSPL.MIX.011_.png'.format(nameFile)
+# if (cid == 3):
+# newNameFile = '{} - SSPL.VAL.73.02.png'.format(nameFile)
+# if (cid == 4):
+# newNameFile = '{} - SSPL.VAL.73.01.png'.format(nameFile)
+# if (cid == 5):
+# newNameFile = '{} - BKE.VAL.73.01.png'.format(nameFile)
+# if (cid == 6):
+# newNameFile = '{} - GRNA.VAL.73.01.png'.format(nameFile)
