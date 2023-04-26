@@ -12,25 +12,26 @@ from daysNumber import daysNumber
 def createReport(cid, startPicture, endPicture, daysNumber):
     endOfMonth = True
     errorLog = []
-    fileName = '017_FT2210_01_Daily Burst Traffic Utilization Report_SSPL.VAL.73.02_October 2022.xlsx'
+    fileName = input("Insert your filename: ") + ".xlsx"
+    # fileName = '017_FT2211_01_Daily Burst Traffic Utilization Report_SSPL.MIX1.011_November 2022_PRTG.xlsx'
 
     # Load the workbook
     wb = load_workbook(fileName)
 
-    if (cid == 0):
-        newNameFile = '{} - SSPL.VAL.13.02.png'.format('date')
-    if (cid == 1):
-        newNameFile = '{} - SSPL.VAL.13.03.png'.format('date')
-    if (cid == 2):
-        newNameFile = '{} - SSPL.MIX.011_.png'.format('date')
-    if (cid == 3):
-        newNameFile = '{} - SSPL.VAL.73.02.png'.format('date')
-    if (cid == 4):
-        newNameFile = '{} - SSPL.VAL.73.01.png'.format('date')
-    if (cid == 5):
-        newNameFile = '{} - BKE.VAL.73.01.png'.format('date')
-    if (cid == 6):
-        newNameFile = '{} - GRNA.VAL.73.01.png'.format('date')
+    # if (cid == 0):
+    #     newNameFile = '{} - SSPL.VAL.13.02.png'.format('date')
+    # if (cid == 1):
+    #     newNameFile = '{} - SSPL.VAL.13.03.png'.format('date')
+    # if (cid == 2):
+    #     newNameFile = '{} - SSPL.MIX1.011.png'.format('date')
+    # if (cid == 3):
+    #     newNameFile = '{} - SSPL.VAL.73.02.png'.format('date')
+    # if (cid == 4):
+    #     newNameFile = '{} - SSPL.VAL.73.01.png'.format('date')
+    # if (cid == 5):
+    #     newNameFile = '{} - BKE.VAL.73.01.png'.format('date')
+    # if (cid == 6):
+    #     newNameFile = '{} - GRNA.VAL.73.01.png'.format('date')
 
 
     print('This will be working on row', startPicture, 'until', endPicture)
@@ -67,6 +68,7 @@ def createReport(cid, startPicture, endPicture, daysNumber):
     row = 36
     rowoffset = cellh(0.7)
 
+
     for i in range(startPicture, endPicture):
         # This is for graph
         if daysNumber == 30:
@@ -77,7 +79,7 @@ def createReport(cid, startPicture, endPicture, daysNumber):
         if (cid == 1):
             newNameFile = '{} - SSPL.VAL.13.03.png'.format(i)
         if (cid == 2):
-            newNameFile = '{} - SSPL.MIX.011_.png'.format(i)
+            newNameFile = '{} - SSPL.MIX1.011.png'.format(i)
         if (cid == 3):
             newNameFile = '{} - SSPL.VAL.73.02.png'.format(i)
         if (cid == 4):
@@ -91,25 +93,44 @@ def createReport(cid, startPicture, endPicture, daysNumber):
         # This is for table
         imgTable = Image('./imgs/table/{}'.format(newNameFile))
 
-        try:
-            if newNameFile:
-                result = findValue('./imgs/table/{}'.format(newNameFile))
-                result1 = result[0][0].replace('.',',')
-                result2 = result[0][1].replace('.',',')
-                cellRow = 36 + i
-                print(result1, result2, 'cell row', cellRow)
+        print(newNameFile)
+        result = findValue('./imgs/table/{}'.format(newNameFile))
+        # result = result[0][0].replace('.',',')
+        # print(result[0])
+        # exit()
+        if newNameFile:
+            result = findValue('./imgs/table/{}'.format(newNameFile))
+            print(result)
+            try:
+                result1 = result[0][0].replace(',','')
+                result2 = result[0][1].replace(',','')
+            except:
+                result1 = result[0][0]
+                result2 = result[0][1]
+                print('unable to fix the value')
+            # result1 = result[0][0]
+            # result2 = result[0][1]
+            cellRow = 36 + i
+            print(result1, result2, 'cell row', cellRow)
+            if (type(result1) == type('string')):
+                ws['D{}'.format(cellRow)] = result1
+                ws['F{}'.format(cellRow)] = result2
+            else:
                 ws['D{}'.format(cellRow)] = int(result1)/1000
                 ws['F{}'.format(cellRow)]  = int(result2)/1000  
                 ws['D{}'.format(cellRow)].number_format = '#,##'
                 ws['F{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
-            # insertValue = findValue('{}.1'.format(i))
-            # ws['D{}'.format(row + i)] = insertValue[0]
-            # ws['F{}'.format(row + i)] = insertValue[1]
-
-        except:
-            print('data unavailable')
-            errorLog.append(newNameFile)
-
+                
+        # insertValue = findValue('{}.1'.format(i))
+        # ws['D{}'.format(row + i)] = insertValue[0]
+        # ws['F{}'.format(row + i)] = insertValue[1]
+        # try:
+        #     pass
+        # except:
+        #     # exit() 
+        #     print('data unavailable')
+        #     errorLog.append(newNameFile)
+        
 
         h, w = img.height, img.width
 
@@ -136,8 +157,8 @@ def createReport(cid, startPicture, endPicture, daysNumber):
                 result = findValue('./imgs/table/32{}'.format(newNameFile))
                 # Average field
 
-                result1 = result[1][0].replace('.',',')
-                result2 = result[1][1].replace('.',',')
+                result1 = result[1][0]
+                result2 = result[1][1]
                 cellRow = 69
                 print(result1, result2, 'cell row', cellRow)
                 ws['D{}'.format(cellRow)] = int(result1)/1000
@@ -145,8 +166,8 @@ def createReport(cid, startPicture, endPicture, daysNumber):
                 ws['D{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
                 ws['F{}'.format(cellRow)].number_format = numbers.FORMAT_NUMBER
                 
-                result1 = result[0][0].replace('.',',')
-                result2 = result[0][1].replace('.',',')
+                result1 = result[0][0]
+                result2 = result[0][1]
                 cellRow = 71
                 print(result1, result2, 'cell row', cellRow)
                 ws['D{}'.format(cellRow)] = int(result1)/1000
@@ -173,7 +194,7 @@ def createReport(cid, startPicture, endPicture, daysNumber):
     print('please check the log below: {}'.format(errorLog))
 
 
-createReport(3, 1, 32, daysNumber(2022, 9))
+createReport(2, 1, 32, 32)
 # if (cid == 0):
 # newNameFile = '{} - SSPL.VAL.13.02.png'.format(i)
 # if (cid == 1):

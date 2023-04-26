@@ -23,8 +23,10 @@ def threshold(img):
 
 def findValue(image):
     value = []
+    value2 = [[],[]]
     averageValues = []
     percentileValues = []
+    allResults = []
     # img = cv2.imread('{} - SSPL.VAL.13.02.png'.format(image))
     img = cv2.imread('{}'.format(image))
     resize = cv2.resize(img, None, fx=6.5, fy=6.5, interpolation=cv2.INTER_CUBIC)
@@ -115,21 +117,38 @@ def findValue(image):
                                 averageValues.append(averageValue)
             except:
                 pass
+            # method 2, store all result in an array
+            allResults.append(d['text'][i])
+            
     value.append(percentileValues)
     value.append(averageValues)
+    value2[1].append(allResults[15])
+    value2[1].append(allResults[23])
+    value2[0].append(allResults[17])
+    value2[0].append(allResults[25])
+    print(" ")
+    if (allResults[16] == 'Mbit/s'):
+        def inKB(n):
+            try:
+                return int(allResults[n]) * 1000
+            except:
+                if (re.search(r'\d\.\d', str(allResults[n]))):
+                    allResults[n] = str(allResults[n]).replace('.','')
+                    return int(allResults[n]) * 10
+                if (re.search(r'\d\,\d', str(allResults[n]))):
+                    allResults[n] = str(allResults[n]).replace(',','')
+                    return int(allResults[n])
 
-    for i in range(len(value)):
-        for j in range(len(value[i])):
-            # print(value[i][j])
-            if (re.search(r',', value[i][j])):
-                value[i][j] = value[i][j].replace(',','')
-            if (re.search(r'.', value[i][j])):
-                value[i][j] = value[i][j].replace('.','')
-    # for numbers in value:
-    #     for number in numbers:
-    #         if (re.search(r',', number)):
-    #             print(number)
-    return value
+        value2[1][0] = inKB(15)
+        value2[1][1] = inKB(23)
+        value2[0][0] = inKB(17)
+        value2[0][1] = inKB(25)
 
-# print(findValue('./imgs/table/6 - SSPL.VAL.13.02.png'))
-# print(findValue('./imgs/table/7 - SSPL.VAL.13.02.png'))
+
+
+
+    # [[percentile in, percentile out], [average in, average out]]
+    # those return value are in kb
+    return value2
+# a = findValue('./imgs/table/1 - SSPL.VAL.13.03.png')
+# print(findValue('./imgs/table/1 - SSPL.VAL.73.03.png'))

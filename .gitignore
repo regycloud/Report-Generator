@@ -1,8 +1,3 @@
-/014_FT2107_01_Daily Burst Traffic Utilization Report_SSPL.VAL.13.02_July 2021_PRTG.xlsx
-/imgs
-/pdfs
-/result.xlsx
-/venv
-/__pycache__
-/*xlsx
-/laporan*
+*
+!*.py
+!*.md

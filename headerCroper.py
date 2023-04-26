@@ -24,25 +24,30 @@ def cropImage(cid, startNumber, endNumber, daysNumber):
             newNameFile = '{} - BKE.VAL.73.01.png'.format(nameFile)
         if (cid == 6):
             newNameFile = '{} - GRNA.VAL.73.01.png'.format(nameFile)
+        def crop():
+            im = Image.open('./imgs/graph/{}'.format(newNameFile))
+                #  x = 306
+                #  left = x - 16
+                #  y = 4954
+                #  right = y - 19
+            width, height = im.size
+
+            # x = findValue('./imgs/graph/{}'.format(newNameFile))[1]
+            # print(width, height, x)
+            # cropped = im.crop((0, width-x - 20, width, height))
+            cropped = im.crop((0, 33, width, height))
+            cropped.save("./imgs/graph/" + newNameFile)
+            print('crop success')
+            nameFile += 1
 
 
-        
-        im = Image.open('./imgs/graph/{}'.format(newNameFile))
-            #  x = 306
-            #  left = x - 16
-            #  y = 4954
-            #  right = y - 19
-        width, height = im.size
+        try:
+            crop()
 
-        # x = findValue('./imgs/graph/{}'.format(newNameFile))[1]
-        # print(width, height, x)
-        # cropped = im.crop((0, width-x - 20, width, height))
-        cropped = im.crop((0, 33, width, height))
-        cropped.save(newNameFile)
-        print('crop success')
+        except:
+            nameFile = int(nameFile)
+            nameFile += 1
 
-        nameFile = int(nameFile)
-        nameFile += 1
 
 # print(findValue('./imgs/graph/3 - SSPL.VAL.13.02.png'))
 # crop Image (cid, start, end, func(daysNumber))
@@ -50,11 +55,15 @@ def cropImage(cid, startNumber, endNumber, daysNumber):
 # print(cropImage(0,1,32,daysNumber))
 # print(cropImage(1,1,32,daysNumber))
 # print(cropImage(4,1,32,daysNumber))
-i = 0
+# i = 0
 # while i <= 6:
 #     cropImage(i, 1, 32, daysNumber(2021, 12))
 #     i += 1
-cropImage(3, 1, 32, daysNumber=(2022, 10))
+# cropImage(0, 32, 32, daysNumber=(2023, 1))
+cropImage(0, 1, 32, 32)
+cropImage(2, 1, 32, 32)
+# print('error')
+# cropImage(6, 1, 32, daysNumber=(2022, 12))
 
 # if (cid == 0):
 # newNameFile = '{} - SSPL.VAL.13.02.png'.format(nameFile)
